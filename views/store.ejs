@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Bus Ticket Booking</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="bg-primary text-white text-center py-3 mb-4">
+      <h1>Bus Ticket Booking</h1>
+    </header>
+
+    <main class="container">
+      <% if (typeof error !== 'undefined') { %>
+      <div class="alert alert-danger"><%= error %></div>
+      <% } %> <% if (typeof success !== 'undefined') { %>
+      <div class="alert alert-success"><%= success %></div>
+      <% } %>
+
+      <form action="/store/upload" method="POST" enctype="multipart/form-data">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="schedule_id" class="form-label">Chọn lịch trình</label>
+            <select
+              name="schedule_id"
+              id="schedule_id"
+              class="form-select"
+              required
+            >
+              <option value="">-- Chọn --</option>
+              <% schedules.forEach(s => { %>
+              <option value="<%= s.id %>">
+                <%= s.route_name %> | Xe: <%= s.bus_license_plate %> | Khởi
+                hành: <%= s.departure_time %>
+              </option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="seat_class" class="form-label">Hạng ghế</label>
+            <select
+              name="seat_class"
+              id="seat_class"
+              class="form-select"
+              required
+            >
+              <option value="">-- Chọn --</option>
+              <option value="standard">Tiêu chuẩn</option>
+              <option value="vip">VIP</option>
+              <option value="luxury">Hạng sang</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <label for="passenger_name" class="form-label">Họ và tên</label>
+            <input
+              type="text"
+              class="form-control"
+              id="passenger_name"
+              name="passenger_name"
+              placeholder="Nguyễn Văn A"
+              required
+            />
+          </div>
+          <div class="col-md-4">
+            <label for="passenger_phone" class="form-label"
+              >Số điện thoại</label
+            >
+            <input
+              type="tel"
+              class="form-control"
+              id="passenger_phone"
+              name="passenger_phone"
+              placeholder="0901234567"
+              required
+            />
+          </div>
+          <div class="col-md-4">
+            <label for="passenger_id_number" class="form-label"
+              >CMND/CCCD</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="passenger_id_number"
+              name="passenger_id_number"
+              placeholder="012345678"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="pickup_location" class="form-label">Điểm lên xe</label>
+          <input
+            type="text"
+            class="form-control"
+            id="pickup_location"
+            name="pickup_location"
+            placeholder="Hà Nội"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="dropoff_location" class="form-label">Điểm xuống xe</label>
+          <input
+            type="text"
+            class="form-control"
+            id="dropoff_location"
+            name="dropoff_location"
+            placeholder="Hải Phòng"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="id_file" class="form-label"
+            >Tải lên CMND/CCCD (tuỳ chọn)</label
+          >
+          <input
+            class="form-control"
+            type="file"
+            id="id_file"
+            name="id_file"
+            accept=".jpg,.jpeg,.png,.pdf"
+          />
+        </div>
+
+        <button type="submit" class="btn btn-success">Đặt vé</button>
+      </form>
+    </main>
+
+    <footer class="text-center mt-5 mb-3 text-muted">
+      &copy; <%= new Date().getFullYear() %> Bus Ticket Booking
+    </footer>
+  </body>
+</html>

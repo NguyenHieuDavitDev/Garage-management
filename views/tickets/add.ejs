@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Thêm Vé Mới</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/semantic-ui/dist/semantic.min.css"
+    />
+  </head>
+  <body>
+    <div class="ui container" style="margin-top: 20px">
+      <h1>Thêm Vé Mới</h1>
+      <form class="ui form" action="/tickets" method="post">
+        <div class="field">
+          <label>Lịch Trình</label>
+          <select name="schedule_id" class="ui dropdown">
+            <% schedules.forEach(schedule => { %>
+              <option value="<%= schedule.id %>"><%= schedule.name %></option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="field">
+          <label>Số Ghế</label>
+          <input type="text" name="seat_number" placeholder="Số Ghế" />
+        </div>
+        <div class="field">
+          <label>Giá</label>
+          <input type="number" step="0.01" name="price" placeholder="Giá" />
+        </div>
+        <div class="field">
+          <label>Trạng Thái</label>
+          <select name="status" class="ui dropdown">
+            <option value="Đã đặt">Đã đặt</option>
+            <option value="Đã thanh toán">Đã thanh toán</option>
+            <option value="Đã sử dụng">Đã sử dụng</option>
+            <option value="Hủy">Hủy</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Mã QR</label>
+          <input type="text" name="qr_code" placeholder="Mã QR" />
+        </div>
+        <div class="field">
+          <label>Tên Hành Khách</label>
+          <input
+            type="text"
+            name="passenger_name"
+            placeholder="Tên Hành Khách"
+          />
+        </div>
+        <div class="field">
+          <label>Số Điện Thoại</label>
+          <input
+            type="text"
+            name="passenger_phone"
+            placeholder="Số Điện Thoại"
+          />
+        </div>
+        <div class="field">
+          <label>Số CMND/CCCD</label>
+          <input
+            type="text"
+            name="passenger_id_number"
+            placeholder="Số CMND/CCCD"
+          />
+        </div>
+        <div class="field">
+          <label>Hạng Ghế</label>
+          <select name="seat_class" class="ui dropdown">
+            <option value="Thường">Thường</option>
+            <option value="VIP">VIP</option>
+            <option value="Deluxe">Deluxe</option>
+          </select>
+        </div>
+        <button type="submit" class="ui primary button">Thêm</button>
+        <button
+          type="button"
+          class="ui button"
+          onclick="window.history.back();"
+        >
+          Hủy
+        </button>
+      </form>
+    </div>
+  </body>
+</html>
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Thêm Tài xế mới</title>
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <style>
+      body {
+        background-color: #f8f9fc;
+      }
+      .card {
+        border: none;
+        border-radius: 1rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+      }
+      .back-btn {
+        margin-bottom: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container my-5">
+      <!-- Nút quay lại -->
+      <button class="btn btn-secondary back-btn" onclick="history.back();">
+        <i class="fas fa-arrow-left me-2"></i>Quay lại
+      </button>
+
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h2 class="card-title mb-0">Thêm Tài xế mới</h2>
+        </div>
+        <div class="card-body">
+          <!-- Sử dụng novalidate để áp dụng custom validation -->
+          <form
+            action="/drivers/create"
+            method="POST"
+            enctype="multipart/form-data"
+            class="needs-validation"
+            novalidate
+          >
+            <div class="mb-3">
+              <label for="first_name" class="form-label">Họ</label>
+              <input
+                type="text"
+                name="first_name"
+                id="first_name"
+                class="form-control"
+                required
+              />
+              <div class="invalid-feedback">Vui lòng nhập họ.</div>
+            </div>
+            <div class="mb-3">
+              <label for="last_name" class="form-label">Tên</label>
+              <input
+                type="text"
+                name="last_name"
+                id="last_name"
+                class="form-control"
+                required
+              />
+              <div class="invalid-feedback">Vui lòng nhập tên.</div>
+            </div>
+            <div class="mb-3">
+              <label for="license_number" class="form-label">Số bằng lái</label>
+              <input
+                type="text"
+                name="license_number"
+                id="license_number"
+                class="form-control"
+                required
+              />
+              <div class="invalid-feedback">Vui lòng nhập số bằng lái.</div>
+            </div>
+            <div class="mb-3">
+              <label for="experience_years" class="form-label"
+                >Số năm kinh nghiệm</label
+              >
+              <input
+                type="number"
+                name="experience_years"
+                id="experience_years"
+                class="form-control"
+                min="0"
+                required
+              />
+              <div class="invalid-feedback">
+                Vui lòng nhập số năm kinh nghiệm (>= 0).
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="date_of_birth" class="form-label">Ngày sinh</label>
+              <input
+                type="date"
+                name="date_of_birth"
+                id="date_of_birth"
+                class="form-control"
+                required
+              />
+              <div class="invalid-feedback">Vui lòng chọn ngày sinh.</div>
+            </div>
+            <div class="mb-3">
+              <label for="address" class="form-label">Địa chỉ</label>
+              <input
+                type="text"
+                name="address"
+                id="address"
+                class="form-control"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="rating" class="form-label"
+                >Đánh giá (tối đa 5.0)</label
+              >
+              <input
+                type="number"
+                name="rating"
+                id="rating"
+                class="form-control"
+                step="0.01"
+                min="0"
+                max="5"
+                value="5.0"
+                required
+              />
+              <div class="invalid-feedback">
+                Vui lòng nhập đánh giá từ 0 đến 5.
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="status" class="form-label">Trạng thái</label>
+              <select name="status" id="status" class="form-select" required>
+                <option value="Hoạt động" selected>Hoạt động</option>
+                <option value="Tạm nghỉ">Tạm nghỉ</option>
+                <option value="Đã nghỉ việc">Đã nghỉ việc</option>
+              </select>
+              <div class="invalid-feedback">Vui lòng chọn trạng thái.</div>
+            </div>
+            <div class="mb-3">
+              <label for="user_id" class="form-label">User ID</label>
+              <input
+                type="number"
+                name="user_id"
+                id="user_id"
+                class="form-control"
+                required
+              />
+              <div class="invalid-feedback">Vui lòng nhập User ID.</div>
+            </div>
+            <div class="mb-3">
+              <label for="avatar" class="form-label"
+                >Avatar (Chọn hình từ máy tính)</label
+              >
+              <input
+                type="file"
+                name="avatar"
+                id="avatar"
+                class="form-control"
+                accept="image/*"
+              />
+              <div class="form-text">Chọn hình đại diện cho tài xế.</div>
+            </div>
+            <button type="submit" class="btn btn-primary">Tạo tài xế</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- REQUIRED SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Bootstrap custom validation
+      (function () {
+        "use strict";
+        const forms = document.querySelectorAll(".needs-validation");
+        Array.from(forms).forEach((form) => {
+          form.addEventListener(
+            "submit",
+            function (event) {
+              if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+              form.classList.add("was-validated");
+            },
+            false
+          );
+        });
+      })();
+    </script>
+  </body>
+</html>

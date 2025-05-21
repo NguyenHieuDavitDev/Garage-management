@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chỉnh Sửa Đặt Vé</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/semantic-ui/dist/semantic.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
+    />
+  </head>
+  <body>
+    <div class="ui container" style="margin-top: 20px">
+      <h1>Chỉnh Sửa Đặt Vé</h1>
+      <form class="ui form" action="/bookings/<%= booking.id %>?_method=PUT" method="post">
+        <div class="field">
+          <label>ID Khách Hàng</label>
+          <input type="number" id="customer_id" name="customer_id" value="<%= booking.customer_id %>" placeholder="ID Khách Hàng" />
+        </div>
+        <div class="field">
+          <label>Tổng Tiền</label>
+          <input type="number" step="0.01" name="total_amount" value="<%= booking.total_amount %>" placeholder="Tổng Tiền" />
+        </div>
+        <div class="field">
+          <label>Trạng Thái</label>
+          <select name="status" class="ui dropdown">
+            <option value="Đang xử lý" <%= booking.status === 'Đang xử lý' ? 'selected' : '' %>>Đang xử lý</option>
+            <option value="Thành công" <%= booking.status === 'Thành công' ? 'selected' : '' %>>Thành công</option>
+            <option value="Thất bại" <%= booking.status === 'Thất bại' ? 'selected' : '' %>>Thất bại</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Nơi Đón</label>
+          <input type="text" name="pickup_location" value="<%= booking.pickup_location %>" placeholder="Nơi Đón" />
+        </div>
+        <div class="field">
+          <label>Nơi Trả</label>
+          <input type="text" name="dropoff_location" value="<%= booking.dropoff_location %>" placeholder="Nơi Trả" />
+        </div>
+        <button type="submit" class="ui primary button">Cập nhật</button>
+        <a href="javascript:history.back()" class="ui button secondary" style="margin-top: 20px;">
+            <i class="fas fa-arrow-left"></i> Quay lại
+          </a>
+      </form>
+     
+    </div>
+
+    <!-- jQuery and jQuery UI -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        $("#customer_id").autocomplete({
+          source: function(request, response) {
+            $.ajax({
+              url: "/customers/search",
+              dataType: "json",
+              data: {
+                term: request.term
+              },
+              success: function(data) {
+                response(data);
+              }
+            });
+          },
+          minLength: 2,
+          select: function(event, ui) {
+            $("#customer_id").val(ui.item.id);
+            return false;
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

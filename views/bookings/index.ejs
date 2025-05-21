@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Quản Lý Đặt Vé</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/semantic-ui/dist/semantic.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <style>
+      body {
+        background-color: #f4f7fa;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .ui.container {
+        margin-top: 30px;
+        padding: 30px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #2c3e50;
+      }
+      .ui.table {
+        border: none;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+      }
+      .ui.table thead th {
+        background: #2980b9;
+        color: #fff;
+        padding: 12px 15px;
+        border: none;
+        border-radius: 6px 6px 0 0;
+      }
+      .ui.table tbody tr {
+        background: #f7f9fa;
+        transition: background 0.3s ease;
+        cursor: pointer;
+      }
+      .ui.table tbody tr:hover {
+        background: #ecf0f1;
+      }
+      .ui.table tbody tr td {
+        padding: 15px;
+        border-top: none;
+        border-bottom: none;
+      }
+      .ui.pagination.menu .item {
+        border-radius: 5px;
+        padding: 10px 15px !important;
+      }
+      .action-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+      .search-filter {
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ui container">
+      <h1>Quản Lý Đặt Vé</h1>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <a href="/bookings/add" class="ui green button">
+          <i class="fas fa-plus"></i> Thêm Đặt Vé Mới
+        </a>
+        <a href="/dashboard" class="ui button secondary">
+          <i class="fas fa-tachometer-alt"></i> Quay lại Dashboard
+        </a>
+      </div>
+
+      <!-- Form Tìm Kiếm và Lọc -->
+      <form method="get" class="ui form search-filter">
+        <div class="fields">
+          <div class="eight wide field">
+            <input
+              type="text"
+              name="search"
+              placeholder="Tìm kiếm nơi đón/trả..."
+              value="<%= search %>"
+            />
+          </div>
+          <div class="four wide field">
+            <select name="status" class="ui dropdown">
+              <option value="">Tất cả trạng thái</option>
+              <option value="Đang xử lý" <%= status === 'Đang xử lý' ? 'selected' : '' %>>Đang xử lý</option>
+              <option value="Thành công" <%= status === 'Thành công' ? 'selected' : '' %>>Thành công</option>
+              <option value="Thất bại" <%= status === 'Thất bại' ? 'selected' : '' %>>Thất bại</option>
+            </select>
+          </div>
+          <div class="four wide field">
+            <button type="submit" class="ui primary button">
+              <i class="fas fa-search"></i> Tìm kiếm
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <!-- Bảng danh sách đặt vé -->
+      <table class="ui striped celled table">
+        <thead>
+          <tr>
+            <th><i class="fas fa-id-badge"></i> ID</th>
+            <th><i class="fas fa-user"></i> Khách Hàng</th>
+            <th><i class="fas fa-calendar-alt"></i> Ngày Đặt</th>
+            <th><i class="fas fa-money-bill-wave"></i> Tổng Tiền</th>
+            <th><i class="fas fa-info-circle"></i> Trạng Thái</th>
+            <th><i class="fas fa-map-marker-alt"></i> Nơi Đón</th>
+            <th><i class="fas fa-map-marker-alt"></i> Nơi Trả</th>
+            <th><i class="fas fa-cogs"></i> Hành Động</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% bookings.forEach(booking => { %>
+          <tr>
+            <td><%= booking.id %></td>
+            <td><%= booking.customer_id %></td>
+            <td><%= booking.booking_date %></td>
+            <td><%= booking.total_amount %></td>
+            <td><%= booking.status %></td>
+            <td><%= booking.pickup_location %></td>
+            <td><%= booking.dropoff_location %></td>
+            <td>
+              <a href="/bookings/<%= booking.id %>/edit" class="ui orange button">
+                <i class="fas fa-edit"></i> Sửa
+              </a>
+              <form
+                action="/bookings/<%= booking.id %>?_method=DELETE"
+                method="post"
+                style="display: inline"
+              >
+                <button type="submit" class="ui red button">
+                  <i class="fas fa-trash-alt"></i> Xóa
+                </button>
+              </form>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+
+      <!-- Phân Trang -->
+      <div class="ui pagination menu">
+        <% if (currentPage > 1) { %>
+        <a href="/bookings?page=<%= currentPage - 1 %>" class="item">
+          <i class="fas fa-chevron-left"></i> Trang trước
+        </a>
+        <% } %>
+        <div class="item">Trang <%= currentPage %> của <%= totalPages %></div>
+        <% if (currentPage < totalPages) { %>
+        <a href="/bookings?page=<%= currentPage + 1 %>" class="item">
+          Trang sau <i class="fas fa-chevron-right"></i>
+        </a>
+        <% } %>
+      </div>
+    </div>
+  </body>
+</html>

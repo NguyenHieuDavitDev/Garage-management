@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Quản Lý Tuyến Đường</title>
+    <!-- Semantic UI CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/semantic-ui/dist/semantic.min.css"
+    />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <style>
+      body {
+        background-color: #e9edf2;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .ui.container {
+        margin-top: 30px;
+        padding: 30px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #2c3e50;
+      }
+      /* Cải tiến bảng */
+      .ui.table {
+        border: none;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+      }
+      .ui.table thead th {
+        background: #2980b9;
+        color: #fff;
+        padding: 12px 15px;
+        border: none;
+        border-radius: 6px 6px 0 0;
+      }
+      .ui.table tbody tr.main-row {
+        background: #f7f9fa;
+        transition: background 0.3s ease;
+        cursor: pointer;
+      }
+      .ui.table tbody tr.main-row:hover {
+        background: #ecf0f1;
+      }
+      .ui.table tbody tr.main-row td {
+        padding: 15px;
+        border-top: none;
+        border-bottom: none;
+      }
+      .ui.table tbody tr.detail-row td {
+        padding: 20px;
+        background: #fdfdfd;
+        border-top: none;
+        border-bottom: none;
+      }
+      /* Card style cho chi tiết */
+      .detail-card {
+        border: 1px solid #dfe6e9;
+        border-radius: 8px;
+        padding: 15px;
+        background: #fff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      }
+      .detail-card p {
+        margin: 5px 0;
+      }
+      .detail-card .ui.button {
+        margin-right: 10px;
+        margin-top: 10px;
+      }
+      /* Hiệu ứng phân trang */
+      .ui.pagination.menu .item {
+        border-radius: 5px;
+        padding: 10px 15px !important;
+      }
+      /* Nút Quay lại Dashboard */
+      .back-dashboard {
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ui container">
+      <!-- Nút Quay lại Dashboard -->
+      <a href="/dashboard" class="ui button secondary back-dashboard">
+        <i class="fas fa-tachometer-alt"></i> Quay lại Dashboard
+      </a>
+
+      <h1>
+        <i class="fas fa-route"></i>
+        Quản Lý Tuyến Đường
+      </h1>
+      <!-- Nút thêm tuyến -->
+      <a href="/routes/add" class="ui green button">
+        <i class="fas fa-plus"></i> Thêm Tuyến Đường
+      </a>
+
+      <!-- Form Tìm Kiếm -->
+      <form method="get" class="ui form" style="margin-top: 20px">
+        <div class="ui action input fluid">
+          <input
+            type="text"
+            name="search"
+            placeholder="Tìm tuyến đường..."
+            value="<%= search %>"
+          />
+          <button type="submit" class="ui primary button">
+            <i class="fas fa-search"></i> Tìm kiếm
+          </button>
+        </div>
+      </form>
+
+      <!-- Bảng danh sách -->
+      <table class="ui striped celled table" style="margin-top: 20px">
+        <thead>
+          <tr>
+            <th style="width: 5%">ID</th>
+            <th style="width: 20%">Tên Tuyến</th>
+            <th style="width: 20%">Nơi Khởi Hành</th>
+            <th style="width: 20%">Nơi Đến</th>
+            <th style="width: 10%">Khoảng Cách (km)</th>
+            <th style="width: 15%">Thời Gian Dự Kiến</th>
+            <th style="width: 10%">Giá Vé</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% routes.forEach(route => { %>
+          <!-- Hàng chính hiển thị tóm tắt -->
+          <tr class="main-row">
+            <td><%= route.id %></td>
+            <td><%= route.route_name %></td>
+            <td><%= route.start_location %></td>
+            <td><%= route.end_location %></td>
+            <td><%= route.distance_km %></td>
+            <td><%= route.expected_duration %></td>
+            <td><%= route.ticket_price %></td>
+          </tr>
+          <!-- Hàng chi tiết (ẩn ban đầu) -->
+          <tr class="detail-row" style="display: none">
+            <td colspan="7">
+              <div class="detail-card">
+                <p><strong>ID:</strong> <%= route.id %></p>
+                <p><strong>Tên Tuyến:</strong> <%= route.route_name %></p>
+                <p>
+                  <strong>Nơi Khởi Hành:</strong> <%= route.start_location %>
+                </p>
+                <p><strong>Nơi Đến:</strong> <%= route.end_location %></p>
+                <p>
+                  <strong>Khoảng Cách (km):</strong> <%= route.distance_km %>
+                </p>
+                <p>
+                  <strong>Thời Gian Dự Kiến:</strong> <%=
+                  route.expected_duration %>
+                </p>
+                <p><strong>Giá Vé:</strong> <%= route.ticket_price %></p>
+                <div class="ui divider"></div>
+                <!-- Các nút thao tác -->
+                <a href="/routes/<%= route.id %>/edit" class="ui orange button">
+                  <i class="fas fa-edit"></i> Sửa
+                </a>
+                <form
+                  action="/routes/<%= route.id %>?_method=DELETE"
+                  method="post"
+                  style="display: inline"
+                >
+                  <button type="submit" class="ui red button">
+                    <i class="fas fa-trash-alt"></i> Xóa
+                  </button>
+                </form>
+                <button class="ui blue button">
+                  <i class="fas fa-save"></i> Lưu
+                </button>
+              </div>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+
+      <!-- Phân Trang -->
+      <div class="ui pagination menu">
+        <% if (currentPage > 1) { %>
+        <a href="/routes?page=<%= currentPage - 1 %>" class="item">
+          <i class="fas fa-chevron-left"></i> Trang trước
+        </a>
+        <% } %>
+        <div class="item">Trang <%= currentPage %> của <%= totalPages %></div>
+        <% if (currentPage < totalPages) { %>
+        <a href="/routes?page=<%= currentPage + 1 %>" class="item">
+          Trang sau <i class="fas fa-chevron-right"></i>
+        </a>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- jQuery cho hiệu ứng toggle -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        // Toggle chi tiết khi nhấp vào hàng chính
+        $(".main-row").on("click", function () {
+          $(this).next(".detail-row").fadeToggle(300);
+        });
+      });
+    </script>
+  </body>
+</html>

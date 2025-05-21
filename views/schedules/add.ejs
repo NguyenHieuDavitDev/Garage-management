@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Thêm Lịch Trình</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/semantic-ui/dist/semantic.min.css"
+    />
+  </head>
+  <body>
+    <div class="ui container" style="margin-top: 20px">
+      <a href="javascript:history.back()" class="ui button secondary">
+        <i class="fas fa-arrow-left"></i> Quay lại
+      </a>
+      <h1>Thêm Lịch Trình Mới</h1>
+      <form class="ui form" action="/schedules" method="post">
+        <div class="field">
+          <label>Route ID</label>
+          <select name="route_id" class="ui dropdown">
+            <option value="1">Route 1</option>
+            <option value="2">Route 2</option>
+            <option value="3">Route 3</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Bus ID</label>
+          <select name="bus_id" class="ui dropdown">
+            <option value="101">Bus 101</option>
+            <option value="102">Bus 102</option>
+            <option value="103">Bus 103</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Departure Time</label>
+          <input type="datetime-local" name="departure_time" />
+        </div>
+        <div class="field">
+          <label>Arrival Time</label>
+          <input type="datetime-local" name="arrival_time" />
+        </div>
+        <div class="field">
+          <label>Estimated Duration (HH:MM:SS)</label>
+          <input
+            type="text"
+            name="estimated_duration"
+            placeholder="Estimated Duration"
+          />
+        </div>
+        <div class="field">
+          <label>Status</label>
+          <select name="status" class="ui dropdown">
+            <option value="Sắp khởi hành">Sắp khởi hành</option>
+            <option value="Đang chạy">Đang chạy</option>
+            <option value="Hoàn thành">Hoàn thành</option>
+            <option value="Hủy">Hủy</option>
+          </select>
+        </div>
+        <button type="submit" class="ui primary button">Thêm</button>
+      </form>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Quản Lý Lịch Trình</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/semantic-ui/dist/semantic.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <style>
+      body {
+        background-color: #f4f7fa;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .ui.container {
+        margin-top: 30px;
+        padding: 30px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #2c3e50;
+      }
+      .ui.table {
+        border: none;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+      }
+      .ui.table thead th {
+        background: #2980b9;
+        color: #fff;
+        padding: 12px 15px;
+        border: none;
+        border-radius: 6px 6px 0 0;
+      }
+      .ui.table tbody tr {
+        background: #f7f9fa;
+        transition: background 0.3s ease;
+        cursor: pointer;
+      }
+      .ui.table tbody tr:hover {
+        background: #ecf0f1;
+      }
+      .ui.table tbody tr td {
+        padding: 15px;
+        border-top: none;
+        border-bottom: none;
+      }
+      .ui.pagination.menu .item {
+        border-radius: 5px;
+        padding: 10px 15px !important;
+      }
+      .back-dashboard {
+        margin-bottom: 20px;
+      }
+      .ui.action.input.fluid {
+        display: flex;
+        align-items: center;
+      }
+      .ui.action.input.fluid input[type="text"] {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px 0 0 4px;
+      }
+      .ui.action.input.fluid .ui.button {
+        border-radius: 0 4px 4px 0;
+      }
+      .ui.form select {
+        width: 150px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ui container">
+        <a href="/dashboard" class="ui button secondary back-dashboard">
+            <i class="fas fa-tachometer-alt"></i> Quay lại Dashboard
+          </a>
+      <h1>
+        <i class="fas fa-calendar-alt"></i>
+        Quản Lý Lịch Trình
+      </h1>
+      <a href="/schedules/add" class="ui green button">
+        <i class="fas fa-plus"></i> Thêm Lịch Trình
+      </a>
+      <form method="get" class="ui form" style="margin-top: 20px">
+        <div class="ui action input fluid">
+          <input
+            type="text"
+            name="search"
+            placeholder="Tìm lịch trình..."
+            value="<%= search %>"
+          />
+          <select name="filter" class="ui dropdown">
+            <option value="">Tất cả trạng thái</option>
+            <option value="Sắp khởi hành" <%= filter === 'Sắp khởi hành' ? 'selected' : '' %>>Sắp khởi hành</option>
+            <option value="Đang chạy" <%= filter === 'Đang chạy' ? 'selected' : '' %>>Đang chạy</option>
+            <option value="Hoàn thành" <%= filter === 'Hoàn thành' ? 'selected' : '' %>>Hoàn thành</option>
+            <option value="Hủy" <%= filter === 'Hủy' ? 'selected' : '' %>>Hủy</option>
+          </select>
+          <button type="submit" class="ui primary button">
+            <i class="fas fa-search"></i> Tìm kiếm
+          </button>
+        </div>
+      </form>
+      <table class="ui striped celled table" style="margin-top: 20px">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Route ID</th>
+            <th>Bus ID</th>
+            <th>Departure Time</th>
+            <th>Arrival Time</th>
+            <th>Estimated Duration</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% schedules.forEach(schedule => { %>
+          <tr>
+            <td><%= schedule.id %></td>
+            <td><%= schedule.route_id %></td>
+            <td><%= schedule.bus_id %></td>
+            <td><%= schedule.departure_time %></td>
+            <td><%= schedule.arrival_time %></td>
+            <td><%= schedule.estimated_duration %></td>
+            <td><%= schedule.status %></td>
+            <td>
+              <a href="/schedules/<%= schedule.id %>/edit" class="ui orange button">
+                <i class="fas fa-edit"></i> Sửa
+              </a>
+              <form action="/schedules/<%= schedule.id %>?_method=DELETE" method="post" style="display: inline">
+                <button type="submit" class="ui red button">
+                  <i class="fas fa-trash-alt"></i> Xóa
+                </button>
+              </form>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+      <div class="ui pagination menu">
+        <% if (currentPage > 1) { %>
+        <a href="/schedules?page=<%= currentPage - 1 %>" class="item">
+          <i class="fas fa-chevron-left"></i> Trang trước
+        </a>
+        <% } %>
+        <div class="item">Trang <%= currentPage %> của <%= totalPages %></div>
+        <% if (currentPage < totalPages) { %>
+        <a href="/schedules?page=<%= currentPage + 1 %>" class="item">
+          Trang sau <i class="fas fa-chevron-right"></i>
+        </a>
+        <% } %>
+      </div>
+    </div>
+  </body>
+</html>

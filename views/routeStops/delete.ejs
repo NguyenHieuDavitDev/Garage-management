@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Xoá điểm dừng</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <h1>Xoá điểm dừng</h1>
+    <p>
+      Bạn có chắc chắn muốn xoá điểm dừng "<%= routeStop.stop_name %>" không?
+    </p>
+
+    <form
+      action="/routes/<%= routeId %>/stops/<%= routeStop.id %>?_method=DELETE"
+      method="post"
+    >
+      <button type="submit">Xoá</button>
+      <a href="/routes/<%= routeId %>/stops">Hủy</a>
+    </form>
+  </body>
+</html>

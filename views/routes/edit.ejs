@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chỉnh Sửa Tuyến Đường</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/semantic-ui/dist/semantic.min.css"
+    />
+  </head>
+  <body>
+    <div class="ui container" style="margin-top: 20px">
+      <h1>Chỉnh Sửa Tuyến Đường</h1>
+      <form
+        class="ui form"
+        action="/routes/<%= route.id %>?_method=PUT"
+        method="post"
+      >
+        <div class="field">
+          <label>Tên Tuyến</label>
+          <input
+            type="text"
+            name="route_name"
+            value="<%= route.route_name %>"
+            placeholder="Tên Tuyến"
+          />
+        </div>
+        <div class="field">
+          <label>Nơi Khởi Hành</label>
+          <input
+            type="text"
+            name="start_location"
+            value="<%= route.start_location %>"
+            placeholder="Nơi Khởi Hành"
+          />
+        </div>
+        <div class="field">
+          <label>Nơi Đến</label>
+          <input
+            type="text"
+            name="end_location"
+            value="<%= route.end_location %>"
+            placeholder="Nơi Đến"
+          />
+        </div>
+        <div class="field">
+          <label>Khoảng Cách (km)</label>
+          <input
+            type="number"
+            step="0.01"
+            name="distance_km"
+            value="<%= route.distance_km %>"
+            placeholder="Khoảng Cách"
+          />
+        </div>
+        <div class="field">
+          <label>Thời Gian Dự Kiến (HH:MM:SS)</label>
+          <input
+            type="text"
+            name="expected_duration"
+            value="<%= route.expected_duration %>"
+            placeholder="Thời Gian Dự Kiến"
+          />
+        </div>
+        <div class="field">
+          <label>Giá Vé</label>
+          <input
+            type="number"
+            step="0.01"
+            name="ticket_price"
+            value="<%= route.ticket_price %>"
+            placeholder="Giá Vé"
+          />
+        </div>
+        <button type="submit" class="ui primary button">Cập nhật</button>
+      </form>
+    </div>
+  </body>
+</html>

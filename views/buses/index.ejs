@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản Lý Xe Bus</title>
+  <!-- Semantic UI CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/semantic-ui/dist/semantic.min.css" rel="stylesheet">
+  <!-- Bootstrap CSS (chỉ dùng cho style, không dùng JS) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f9f9f9;
+    }
+    .ui.card {
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+    .ui.card .image img {
+      object-fit: cover;
+      height: 200px;
+    }
+    .dashboard-btn {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="ui container" style="margin-top: 50px;">
+    <div class="ui two column grid">
+      <div class="column">
+        <h1 class="ui header">Quản Lý Xe Bus</h1>
+      </div>
+      <div class="right aligned column">
+        <!-- Nút Quay lại Dashboard -->
+        <a href="/dashboard" class="btn btn-secondary me-3">
+          <i class="fas fa-tachometer-alt"></i> Quay lại Dashboard
+        </a>
+      </div>
+    </div>
+
+    <a href="/buses/add" class="ui green button">
+      <i class="plus icon"></i>
+      Thêm Xe Bus Mới
+    </a>
+
+        <!-- tìm kiếm và bộ lọc -->
+
+    <form method="get" class="ui form" style="margin-top: 20px;">
+      <div class="ui stackable grid">
+        <!-- Input Tìm Kiếm với Gợi Ý -->
+        <div class="eight wide column">
+          <div class="ui icon input fluid">
+            <input type="text" id="search-input" name="search" value="<%= search %>" placeholder="Tìm theo biển số xe, loại xe hoặc thương hiệu">
+            <i class="search icon"></i>
+          </div>
+          <!-- Danh sách gợi ý -->
+          <div id="suggestion-box" class="ui list" style="display: none;"></div>
+        </div>
+    
+        <!-- Dropdown Trạng Thái -->
+        <div class="four wide column">
+          <select name="status" class="ui dropdown fluid">
+            <option value="">Tất Cả Trạng Thái</option>
+            <option value="Hoạt động" <%= status === 'Hoạt động' ? 'selected' : '' %>>Hoạt động</option>
+            <option value="Bảo trì" <%= status === 'Bảo trì' ? 'selected' : '' %>>Bảo trì</option>
+            <option value="Ngừng sử dụng" <%= status === 'Ngừng sử dụng' ? 'selected' : '' %>>Ngừng sử dụng</option>
+          </select>
+        </div>
+    
+        <!-- Nút Tìm Kiếm -->
+        <div class="four wide column">
+          <button type="submit" class="ui primary button fluid">
+            <i class="search icon"></i>
+            Tìm kiếm
+          </button>
+        </div>
+      </div>
+    </form>
+    
+    
+    <!-- Danh sách xe bus theo dạng card -->
+    <div class="ui stackable three column grid" style="margin-top: 30px;">
+      <% buses.forEach(bus => { 
+           // Xác định màu cho trạng thái
+           let statusClass = '';
+           if(bus.status === 'Hoạt động'){
+             statusClass = 'green';
+           } else if(bus.status === 'Bảo trì'){
+             statusClass = 'yellow';
+           } else if(bus.status === 'Ngừng sử dụng'){
+             statusClass = 'red';
+           }
+      %>
+        <div class="column">
+          <!-- Thêm data attributes để truyền thông tin vào modal khi click -->
+          <div class="ui fluid card bus-card"
+               data-id="<%= bus.id %>"
+               data-license_plate="<%= bus.license_plate %>"
+               data-bus_type="<%= bus.bus_type %>"
+               data-brand="<%= bus.brand %>"
+               data-manufacture_year="<%= bus.manufacture_year %>"
+               data-status="<%= bus.status %>"
+               data-image="<%= bus.image %>">
+            <% if (bus.image) { %>
+              <div class="image">
+                <img src="<%= bus.image %>" alt="Hình ảnh xe bus">
+              </div>
+            <% } %>
+            <div class="content">
+              <div class="header">
+                <i class="bus icon"></i>
+                <%= bus.license_plate %>
+              </div>
+              <div class="meta">
+                <span><i class="info circle icon"></i> <%= bus.bus_type %></span>
+              </div>
+              <div class="description">
+                <p><strong>Thương Hiệu:</strong> <%= bus.brand %></p>
+                <p><strong>Năm Sản Xuất:</strong> <%= bus.manufacture_year %></p>
+                <p><strong>Trạng Thái:</strong> 
+                  <span class="ui <%= statusClass %> label"><%= bus.status %></span>
+                </p>
+              </div>
+            </div>
+            <div class="extra content">
+              <div class="ui two buttons">
+                <a href="/buses/<%= bus.id %>/edit" class="ui orange button">
+                  <i class="edit icon"></i>
+                  Chỉnh sửa
+                </a>
+                <a href="/buses/<%= bus.id %>/delete" class="ui red button">
+                  <i class="trash alternate outline icon"></i>
+                  Xóa
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+
+    <!-- Phân Trang -->
+    <div class="ui centered grid" style="margin-top: 20px;">
+      <div class="ui pagination menu">
+        <% if (currentPage > 1) { %>
+          <a href="/buses?page=<%= currentPage - 1 %>" class="item">&laquo; Trang Trước</a>
+        <% } %>
+        <div class="item">Trang <%= currentPage %> của <%= totalPages %></div>
+        <% if (currentPage < totalPages) { %>
+          <a href="/buses?page=<%= currentPage + 1 %>" class="item">Trang Sau &raquo;</a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal hiển thị thông tin xe bus -->
+  <div class="ui modal" id="bus-modal">
+    <i class="close icon"></i>
+    <div class="header">
+      Thông tin xe bus
+    </div>
+    <div class="image content">
+      <div class="ui medium image" id="modal-image">
+        <!-- Hình ảnh sẽ được chèn vào đây nếu có -->
+      </div>
+      <div class="description" id="modal-description">
+        <!-- Thông tin xe sẽ được chèn vào đây -->
+      </div>
+    </div>
+    <div class="actions">
+      <div class="ui black deny button">
+        Đóng
+      </div>
+    </div>
+  </div>
+
+  <!-- Thứ tự tải scripts -->
+  <!-- 1. jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- 2. Semantic UI JS -->
+  <script src="https://cdn.jsdelivr.net/npm/semantic-ui/dist/semantic.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <script>
+    // Khi click vào card, hiển thị modal với thông tin xe
+    $(document).ready(function(){
+      $('.bus-card').on('click', function(){
+        // Lấy dữ liệu từ data attributes của card
+        const licensePlate = $(this).data('license_plate');
+        const busType = $(this).data('bus_type');
+        const brand = $(this).data('brand');
+        const manufactureYear = $(this).data('manufacture_year');
+        const status = $(this).data('status');
+        const image = $(this).data('image');
+
+        // Xác định màu cho trạng thái tương tự
+        let statusLabel = '';
+        if(status === 'Hoạt động'){
+          statusLabel = '<span class="ui green label">' + status + '</span>';
+        } else if(status === 'Bảo trì'){
+          statusLabel = '<span class="ui yellow label">' + status + '</span>';
+        } else if(status === 'Ngừng sử dụng'){
+          statusLabel = '<span class="ui red label">' + status + '</span>';
+        } else {
+          statusLabel = '<span class="ui label">' + status + '</span>';
+        }
+
+        // Xây dựng nội dung hiển thị trong modal
+        const descriptionHtml = `
+          <p><strong>Biển số xe:</strong> ${licensePlate}</p>
+          <p><strong>Loại xe:</strong> ${busType}</p>
+          <p><strong>Thương hiệu:</strong> ${brand}</p>
+          <p><strong>Năm sản xuất:</strong> ${manufactureYear}</p>
+          <p><strong>Trạng thái:</strong> ${statusLabel}</p>
+        `;
+
+        // Nếu có hình ảnh, hiển thị; nếu không, xóa nội dung container hình ảnh
+        if(image) {
+          $('#modal-image').html('<img src="'+ image +'" class="ui image" alt="Hình ảnh xe bus">');
+        } else {
+          $('#modal-image').html('');
+        }
+
+        $('#modal-description').html(descriptionHtml);
+
+        // Hiển thị modal sử dụng Semantic UI
+        $('#bus-modal').modal('show');
+      });
+    });
+    $(document).ready(function () {
+    $("#search-input").on("input", function () {
+      let query = $(this).val().trim();
+      if (query.length < 2) {
+        $("#suggestion-box").hide();
+        return;
+      }
+
+      $.ajax({
+        url: "/api/search-suggestions", // API backend trả về gợi ý (thay đổi endpoint này phù hợp với backend của bạn)
+        method: "GET",
+        data: { query: query },
+        success: function (data) {
+          let suggestions = data.suggestions;
+          if (suggestions.length > 0) {
+            let html = suggestions.map(item => `<div class="item suggestion-item" data-value="${item}">${item}</div>`).join('');
+            $("#suggestion-box").html(html).show();
+          } else {
+            $("#suggestion-box").hide();
+          }
+        }
+      });
+    });
+
+    // Xử lý chọn gợi ý
+    $(document).on("click", ".suggestion-item", function () {
+      let selectedValue = $(this).data("value");
+      $("#search-input").val(selectedValue);
+      $("#suggestion-box").hide();
+    });
+
+    // Ẩn gợi ý khi click bên ngoài
+    $(document).click(function (e) {
+      if (!$(e.target).closest("#search-input, #suggestion-box").length) {
+        $("#suggestion-box").hide();
+      }
+    });
+  });
+  </script>
+</body>
+</html>

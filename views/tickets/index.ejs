@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Quản Lý Vé</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/semantic-ui/dist/semantic.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <style>
+      body {
+        background-color: #f4f7fa;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .ui.container {
+        margin-top: 30px;
+        padding: 30px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #2c3e50;
+      }
+      .ui.form .field {
+        margin-bottom: 20px;
+      }
+      .ui.table {
+        border: none;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+      }
+      .ui.table thead th {
+        background: #2980b9;
+        color: #fff;
+        padding: 12px 15px;
+        border: none;
+        border-radius: 6px 6px 0 0;
+      }
+      .ui.table tbody tr {
+        background: #f7f9fa;
+        transition: background 0.3s ease;
+        cursor: pointer;
+      }
+      .ui.table tbody tr:hover {
+        background: #ecf0f1;
+      }
+      .ui.table tbody tr td {
+        padding: 15px;
+        border-top: none;
+        border-bottom: none;
+      }
+      .ui.button {
+        margin-right: 10px;
+      }
+      .ui.pagination.menu .item {
+        border-radius: 5px;
+        padding: 10px 15px !important;
+      }
+      .ui.form select {
+        width: 150px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ui container">
+      <a href="/dashboard" class="ui button secondary">
+        <i class="fas fa-tachometer-alt"></i> Quay lại Dashboard
+      </a>
+      <h1>
+        <i class="fas fa-ticket-alt"></i>
+        Quản Lý Vé
+      </h1>
+      <!-- Nút thêm vé -->
+      <a href="/tickets/add" class="ui green button">
+        <i class="fas fa-plus"></i> Thêm Vé
+      </a>
+
+      <!-- Form Tìm Kiếm và Lọc -->
+      <form method="get" class="ui form" style="margin-top: 20px">
+        <div class="ui action input fluid">
+          <input
+            type="text"
+            name="search"
+            placeholder="Tìm vé..."
+            value="<%= search %>"
+          />
+          <select name="filter" class="ui dropdown">
+            <option value="">Tất cả trạng thái</option>
+            <option value="Đã đặt" <%= filter === 'Đã đặt' ? 'selected' : '' %>>Đã đặt</option>
+            <option value="Đã thanh toán" <%= filter === 'Đã thanh toán' ? 'selected' : '' %>>Đã thanh toán</option>
+            <option value="Đã sử dụng" <%= filter === 'Đã sử dụng' ? 'selected' : '' %>>Đã sử dụng</option>
+            <option value="Hủy" <%= filter === 'Hủy' ? 'selected' : '' %>>Hủy</option>
+          </select>
+          <button type="submit" class="ui primary button">
+            <i class="fas fa-search"></i> Tìm kiếm
+          </button>
+        </div>
+      </form>
+
+      <!-- Bảng danh sách vé -->
+      <table class="ui striped celled table" style="margin-top: 20px">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Lịch Trình</th>
+            <th>Số Ghế</th>
+            <th>Giá</th>
+            <th>Trạng Thái</th>
+            <th>Hành Khách</th>
+            <th>Thao Tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% tickets.forEach(ticket => { %>
+          <tr>
+            <td><%= ticket.id %></td>
+            <td><%= ticket.schedule_id %></td>
+            <td><%= ticket.seat_number %></td>
+            <td><%= ticket.price %></td>
+            <td><%= ticket.status %></td>
+            <td><%= ticket.passenger_name %></td>
+            <td>
+              <a href="/tickets/<%= ticket.id %>/edit" class="ui orange button">
+                <i class="fas fa-edit"></i> Sửa
+              </a>
+              <form
+                action="/tickets/<%= ticket.id %>?_method=DELETE"
+                method="post"
+                style="display: inline"
+              >
+                <button type="submit" class="ui red button">
+                  <i class="fas fa-trash-alt"></i> Xóa
+                </button>
+              </form>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+
+      <!-- Phân Trang -->
+      <div class="ui pagination menu">
+        <% if (currentPage > 1) { %>
+        <a href="/tickets?page=<%= currentPage - 1 %>" class="item">
+          <i class="fas fa-chevron-left"></i> Trang trước
+        </a>
+        <% } %>
+        <div class="item">Trang <%= currentPage %> của <%= totalPages %></div>
+        <% if (currentPage < totalPages) { %>
+        <a href="/tickets?page=<%= currentPage + 1 %>" class="item">
+          Trang sau <i class="fas fa-chevron-right"></i>
+        </a>
+        <% } %>
+      </div>
+    </div>
+  </body>
+</html>

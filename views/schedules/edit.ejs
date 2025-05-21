@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chỉnh Sửa Lịch Trình</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/semantic-ui/dist/semantic.min.css"
+    />
+  </head>
+  <body>
+    <div class="ui container" style="margin-top: 20px">
+      <a href="javascript:history.back()" class="ui button secondary">
+        <i class="fas fa-arrow-left"></i> Quay lại
+      </a>
+      <h1>Chỉnh Sửa Lịch Trình</h1>
+      <form class="ui form" action="/schedules/<%= schedule.id %>?_method=PUT" method="post">
+        <div class="field">
+          <label>Route ID</label>
+          <select name="route_id" class="ui dropdown">
+            <option value="1" <%= schedule.route_id == 1 ? 'selected' : '' %>>Route 1</option>
+            <option value="2" <%= schedule.route_id == 2 ? 'selected' : '' %>>Route 2</option>
+            <option value="3" <%= schedule.route_id == 3 ? 'selected' : '' %>>Route 3</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Bus ID</label>
+          <select name="bus_id" class="ui dropdown">
+            <option value="101" <%= schedule.bus_id == 101 ? 'selected' : '' %>>Bus 101</option>
+            <option value="102" <%= schedule.bus_id == 102 ? 'selected' : '' %>>Bus 102</option>
+            <option value="103" <%= schedule.bus_id == 103 ? 'selected' : '' %>>Bus 103</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Departure Time</label>
+          <input type="datetime-local" name="departure_time" value="<%= schedule.departure_time.toISOString().slice(0, 16) %>" />
+        </div>
+        <div class="field">
+          <label>Arrival Time</label>
+          <input type="datetime-local" name="arrival_time" value="<%= schedule.arrival_time.toISOString().slice(0, 16) %>" />
+        </div>
+        <div class="field">
+          <label>Estimated Duration (HH:MM:SS)</label>
+          <input type="text" name="estimated_duration" value="<%= schedule.estimated_duration %>" />
+        </div>
+        <div class="field">
+          <label>Status</label>
+          <select name="status" class="ui dropdown">
+            <option value="Sắp khởi hành" <%= schedule.status === 'Sắp khởi hành' ? 'selected' : '' %>>Sắp khởi hành</option>
+            <option value="Đang chạy" <%= schedule.status === 'Đang chạy' ? 'selected' : '' %>>Đang chạy</option>
+            <option value="Hoàn thành" <%= schedule.status === 'Hoàn thành' ? 'selected' : '' %>>Hoàn thành</option>
+            <option value="Hủy" <%= schedule.status === 'Hủy' ? 'selected' : '' %>>Hủy</option>
+          </select>
+        </div>
+        <button type="submit" class="ui primary button">Cập nhật</button>
+      </form>
+    </div>
+  </body>
+</html>
